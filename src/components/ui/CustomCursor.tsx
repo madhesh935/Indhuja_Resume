@@ -3,7 +3,7 @@ import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 export const CustomCursor: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [cursorType, setCursorType] = useState<'default' | 'link' | 'view' | 'button'>('default');
+  const [cursorType, setCursorType] = useState<'default' | 'link' | 'view' | 'button' | 'linkedin' | 'resume'>('default');
   const [isTouchDevice] = useState(() => 
     typeof window !== 'undefined' && (window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window)
   );
@@ -17,7 +17,6 @@ export const CustomCursor: React.FC = () => {
 
   useEffect(() => {
     if (isTouchDevice) return;
-
 
     const moveCursor = (e: MouseEvent) => {
       mouseX.set(e.clientX);
@@ -33,11 +32,17 @@ export const CustomCursor: React.FC = () => {
       if (!target) return;
 
       const projectEl = target.closest('[data-cursor="view"]');
+      const linkedinEl = target.closest('[data-cursor="linkedin"], a[href*="linkedin.com"]');
+      const resumeEl = target.closest('[data-cursor="resume"], [data-action="resume"]');
       const buttonEl = target.closest('button, [data-cursor="button"]');
       const linkEl = target.closest('a, [role="button"], [data-cursor="link"]');
 
       if (projectEl) {
         setCursorType('view');
+      } else if (linkedinEl) {
+        setCursorType('linkedin');
+      } else if (resumeEl) {
+        setCursorType('resume');
       } else if (buttonEl) {
         setCursorType('button');
       } else if (linkEl) {
@@ -60,12 +65,11 @@ export const CustomCursor: React.FC = () => {
     };
   }, [isTouchDevice, isVisible, mouseX, mouseY]);
 
-
   if (isTouchDevice || !isVisible) return null;
 
   return (
     <div className="fixed inset-0 pointer-events-none z-[9999] overflow-hidden">
-      {/* Trailing Outer Ring / Capsule */}
+      {/* Trailing Outer Ring (24-30px default, 60px on view) */}
       <motion.div
         className="absolute top-0 left-0 flex items-center justify-center -translate-x-1/2 -translate-y-1/2 transition-colors duration-200 pointer-events-none"
         style={{
@@ -73,22 +77,22 @@ export const CustomCursor: React.FC = () => {
           y: springY,
         }}
         animate={{
-          width: cursorType === 'view' ? 64 : cursorType === 'button' ? 44 : cursorType === 'link' ? 38 : 32,
-          height: cursorType === 'view' ? 64 : cursorType === 'button' ? 44 : cursorType === 'link' ? 38 : 32,
+          width: cursorType === 'view' ? 62 : cursorType === 'button' || cursorType === 'linkedin' || cursorType === 'resume' ? 36 : cursorType === 'link' ? 32 : 26,
+          height: cursorType === 'view' ? 62 : cursorType === 'button' || cursorType === 'linkedin' || cursorType === 'resume' ? 36 : cursorType === 'link' ? 32 : 26,
           backgroundColor:
             cursorType === 'view'
-              ? 'rgba(184, 145, 82, 0.92)'
-              : cursorType === 'button'
-              ? 'rgba(184, 145, 82, 0.2)'
+              ? 'rgba(198, 161, 91, 0.92)'
+              : cursorType === 'button' || cursorType === 'linkedin' || cursorType === 'resume'
+              ? 'rgba(198, 161, 91, 0.15)'
               : cursorType === 'link'
-              ? 'rgba(22, 21, 19, 0.12)'
-              : 'rgba(184, 145, 82, 0.08)',
+              ? 'rgba(255, 255, 255, 0.08)'
+              : 'rgba(244, 241, 234, 0.04)',
           borderColor:
             cursorType === 'view'
-              ? '#B89152'
-              : cursorType === 'button'
-              ? '#B89152'
-              : 'rgba(184, 145, 82, 0.5)',
+              ? '#C6A15B'
+              : cursorType === 'button' || cursorType === 'linkedin' || cursorType === 'resume'
+              ? '#C6A15B'
+              : 'rgba(244, 241, 234, 0.35)',
           borderWidth: cursorType === 'view' ? '0px' : '1px',
           borderRadius: '9999px',
           backdropFilter: cursorType === 'view' ? 'blur(4px)' : 'none',
@@ -96,25 +100,37 @@ export const CustomCursor: React.FC = () => {
         transition={{ type: 'spring', damping: 25, stiffness: 350 }}
       >
         {cursorType === 'view' && (
-          <span className="text-[10px] font-semibold tracking-widest text-[#11110F] uppercase">
+          <span className="text-[10px] font-semibold tracking-widest text-[#080808] uppercase">
             VIEW
           </span>
         )}
+        {cursorType === 'linkedin' && (
+          <span className="text-xs text-[#C6A15B] font-mono">↗</span>
+        )}
+        {cursorType === 'resume' && (
+          <span className="text-xs text-[#C6A15B] font-mono">↓</span>
+        )}
         {cursorType === 'button' && (
-          <span className="text-xs text-[#B89152] font-mono">↗</span>
+          <span className="text-xs text-[#C6A15B] font-mono">→</span>
         )}
       </motion.div>
 
-      {/* Center Precise Dot */}
+      {/* 8px Center Precise Dot */}
       <motion.div
-        className="absolute top-0 left-0 w-1.5 h-1.5 rounded-full bg-[#B89152] -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+        className="absolute top-0 left-0 w-2 h-2 rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none"
         style={{
           x: mouseX,
           y: mouseY,
+          backgroundColor:
+            cursorType === 'view'
+              ? 'transparent'
+              : cursorType === 'button' || cursorType === 'linkedin' || cursorType === 'resume'
+              ? '#C6A15B'
+              : '#F4F1EA',
         }}
         animate={{
           scale: cursorType === 'view' ? 0 : 1,
-          opacity: cursorType === 'view' ? 0 : 1,
+          opacity: cursorType === 'view' ? 0 : 0.9,
         }}
         transition={{ duration: 0.15 }}
       />

@@ -6,6 +6,10 @@ export interface Project {
   description: string;
   capabilities: string[];
   techStack: string[];
+  challenge?: string;
+  whatIBuilt?: string;
+  myContribution?: string;
+  learnings?: string;
   features?: { title: string; description: string }[];
   featured?: boolean;
   linkText?: string;

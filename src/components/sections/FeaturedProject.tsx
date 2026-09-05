@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { ArrowRight, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, CheckCircle2, AlertCircle, Wrench, Sparkles } from 'lucide-react';
 
 import { FEATURED_PROJECT } from '../../data/portfolioData';
 import { Laptop3D } from '../3d/Laptop3D';
 import { MagneticButton } from '../ui/MagneticButton';
 import { ProjectModal } from '../ui/ProjectModal';
+import { SectionHeader } from '../ui/SectionHeader';
 
 export const FeaturedProject: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,45 +13,51 @@ export const FeaturedProject: React.FC = () => {
   return (
     <section
       id="projects"
-      className="relative py-24 sm:py-32 bg-[#11110F] text-[#F7F4EE] overflow-hidden border-t border-white/8"
+      className="relative py-28 sm:py-36 bg-[#080808] text-[#F4F1EA] overflow-hidden border-t border-white/[0.07] scroll-mt-28"
     >
-      {/* Background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-[#B89152]/4 rounded-full filter blur-[140px] pointer-events-none" />
+      {/* Background ambient lighting */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#C6A15B]/[0.035] rounded-full filter blur-[160px] pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
         {/* Section Header */}
-        <div className="max-w-3xl mb-12 sm:mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="flex items-center gap-2.5 mb-3"
-          >
-            <span className="w-5 h-[1px] bg-[#B89152]" />
-            <span className="text-xs font-semibold tracking-[0.25em] uppercase text-[#B89152]">
-              FEATURED PROJECT
-            </span>
-          </motion.div>
+        <SectionHeader
+          label="03 / SELECTED WORK"
+          title="Projects Built Around Real Problems."
+          subtitle="A focused selection of technical work combining data handling, structured logic, and functional application interfaces."
+          theme="dark"
+          align="left"
+        />
 
-          <motion.h2
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight text-[#F7F4EE] leading-[1.12]"
-          >
-            {FEATURED_PROJECT.title}
-          </motion.h2>
+        {/* Featured Project Header Banner */}
+        <div className="mt-8 mb-10 p-6 sm:p-8 rounded-2xl sm:rounded-3xl bg-[#0D0D0D] border border-white/[0.08] flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-[11px] font-mono font-semibold tracking-widest text-[#C6A15B] uppercase">
+                FEATURED CAPSTONE
+              </span>
+              <span className="w-1 h-1 rounded-full bg-[#C6A15B]" />
+              <span className="text-[11px] font-mono text-[#77736C] uppercase">
+                ACADEMIC &amp; PRACTICAL BUILD
+              </span>
+            </div>
+            <h3 className="font-serif text-2xl sm:text-3xl md:text-4xl text-[#F4F1EA] font-medium tracking-tight">
+              {FEATURED_PROJECT.title}
+            </h3>
+            <p className="mt-2 text-xs sm:text-sm font-mono tracking-wider text-[#DFC786] uppercase">
+              {FEATURED_PROJECT.subtitle}
+            </p>
+          </div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="mt-3 text-xs sm:text-sm font-mono tracking-wider text-[#D3B679] uppercase"
-          >
-            {FEATURED_PROJECT.subtitle}
-          </motion.p>
+          <div className="shrink-0 flex items-center gap-3">
+            <MagneticButton
+              variant="primary"
+              onClick={() => setIsModalOpen(true)}
+              className="text-xs sm:text-sm px-6 py-3 font-semibold"
+            >
+              <span>View Case Study</span>
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </MagneticButton>
+          </div>
         </div>
 
         {/* 3D Laptop Mockup Canvas */}
@@ -59,58 +65,103 @@ export const FeaturedProject: React.FC = () => {
           <Laptop3D onOpenDetails={() => setIsModalOpen(true)} />
         </div>
 
-        {/* Project Description & Architecture Details Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start pt-6 border-t border-white/10">
-          <div className="lg:col-span-7">
-            <h3 className="text-xs font-bold tracking-widest text-[#B89152] uppercase mb-3">
-              Operational Focus &amp; Architecture
-            </h3>
-            <p className="text-base sm:text-lg text-[#A09D96] font-light leading-relaxed mb-6">
-              “{FEATURED_PROJECT.description}”
-            </p>
-
-            <div className="flex flex-wrap items-center gap-4">
-              <MagneticButton
-                variant="primary"
-                onClick={() => setIsModalOpen(true)}
-              >
-                <span>Project Details</span>
-                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-              </MagneticButton>
+        {/* 4-Part Storytelling Architecture Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-8 border-t border-white/[0.08]">
+          {/* 1. The Challenge */}
+          <div className="p-6 rounded-2xl bg-[#111111] border border-white/[0.08] flex flex-col justify-between group hover:border-[#C6A15B]/40 transition-colors">
+            <div>
+              <div className="flex items-center gap-2 text-xs font-mono font-semibold text-[#C6A15B] uppercase mb-3">
+                <AlertCircle className="w-4 h-4 text-[#C6A15B]" />
+                <span>The Challenge</span>
+              </div>
+              <p className="text-xs sm:text-sm text-[#A9A59D] font-light leading-relaxed">
+                {FEATURED_PROJECT.challenge}
+              </p>
+            </div>
+            <div className="mt-6 pt-3 border-t border-white/[0.06] text-[10px] font-mono text-[#77736C]">
+              PHASE · ANALYSIS
             </div>
           </div>
 
-          {/* Capabilities Matrix */}
-          <div className="lg:col-span-5 space-y-4">
-            <h4 className="text-xs font-semibold text-[#D3B679] tracking-wider uppercase font-mono">
-              System Modules
-            </h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              {FEATURED_PROJECT.capabilities.map((cap) => (
-                <div
-                  key={cap}
-                  className="flex items-center gap-2 p-2.5 rounded-lg bg-[#1A1916] border border-white/6 text-xs text-[#E5E2DC]"
-                >
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#B89152] shrink-0" />
-                  <span>{cap}</span>
-                </div>
-              ))}
+          {/* 2. What I Built */}
+          <div className="p-6 rounded-2xl bg-[#111111] border border-white/[0.08] flex flex-col justify-between group hover:border-[#C6A15B]/40 transition-colors">
+            <div>
+              <div className="flex items-center gap-2 text-xs font-mono font-semibold text-[#C6A15B] uppercase mb-3">
+                <Sparkles className="w-4 h-4 text-[#C6A15B]" />
+                <span>What I Built</span>
+              </div>
+              <p className="text-xs sm:text-sm text-[#A9A59D] font-light leading-relaxed">
+                {FEATURED_PROJECT.whatIBuilt}
+              </p>
             </div>
+            <div className="mt-6 pt-3 border-t border-white/[0.06] text-[10px] font-mono text-[#77736C]">
+              PHASE · IMPLEMENTATION
+            </div>
+          </div>
 
-            {/* Tech stack badge list */}
-            <div className="pt-2">
-              <span className="text-[11px] font-mono text-[#706D67] block mb-2">Technologies Used:</span>
-              <div className="flex flex-wrap gap-2">
-                {FEATURED_PROJECT.techStack.map((tech) => (
-                  <span
-                    key={tech}
-                    className="px-2.5 py-1 rounded bg-[#161513] text-[#D3B679] border border-white/10 text-xs font-mono"
-                  >
-                    {tech}
-                  </span>
+          {/* 3. Core Modules */}
+          <div className="p-6 rounded-2xl bg-[#111111] border border-white/[0.08] flex flex-col justify-between group hover:border-[#C6A15B]/40 transition-colors">
+            <div>
+              <div className="flex items-center gap-2 text-xs font-mono font-semibold text-[#C6A15B] uppercase mb-3">
+                <CheckCircle2 className="w-4 h-4 text-[#C6A15B]" />
+                <span>Core Modules</span>
+              </div>
+              <div className="space-y-1.5">
+                {FEATURED_PROJECT.capabilities.slice(0, 4).map((mod) => (
+                  <div key={mod} className="flex items-center gap-2 text-xs text-[#A9A59D]">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#C6A15B]/60" />
+                    <span>{mod}</span>
+                  </div>
                 ))}
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(true)}
+                  className="text-[11px] font-mono text-[#DFC786] hover:underline pt-1 block"
+                >
+                  +{FEATURED_PROJECT.capabilities.length - 4} more modules →
+                </button>
               </div>
             </div>
+            <div className="mt-6 pt-3 border-t border-white/[0.06] text-[10px] font-mono text-[#77736C]">
+              PHASE · ARCHITECTURE
+            </div>
+          </div>
+
+          {/* 4. My Contribution */}
+          <div className="p-6 rounded-2xl bg-[#111111] border border-white/[0.08] flex flex-col justify-between group hover:border-[#C6A15B]/40 transition-colors">
+            <div>
+              <div className="flex items-center gap-2 text-xs font-mono font-semibold text-[#C6A15B] uppercase mb-3">
+                <Wrench className="w-4 h-4 text-[#C6A15B]" />
+                <span>My Contribution</span>
+              </div>
+              <p className="text-xs sm:text-sm text-[#A9A59D] font-light leading-relaxed">
+                {FEATURED_PROJECT.myContribution}
+              </p>
+            </div>
+            <div className="mt-6 pt-3 border-t border-white/[0.06] text-[10px] font-mono text-[#77736C]">
+              PHASE · DEVELOPMENT
+            </div>
+          </div>
+        </div>
+
+        {/* Tech Stack Bar */}
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-[#0D0D0D] border border-white/[0.06]">
+          <div className="flex items-center gap-2 text-xs font-mono text-[#77736C]">
+            <span>TECH STACK:</span>
+            <div className="flex flex-wrap gap-2">
+              {FEATURED_PROJECT.techStack.map((tech) => (
+                <span
+                  key={tech}
+                  className="px-2.5 py-1 rounded bg-[#151515] text-[#DFC786] border border-white/[0.08] text-xs font-mono"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="text-[11px] font-mono text-[#77736C]">
+            CONCEPT INTERFACE · DEMO DATA · ZERO FABRICATED METRICS
           </div>
         </div>
       </div>
@@ -124,3 +175,4 @@ export const FeaturedProject: React.FC = () => {
     </section>
   );
 };
+

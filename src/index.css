@@ -1,43 +1,52 @@
 @import "tailwindcss";
 
 @theme {
-  --color-cream: #F7F4EE;
-  --color-cream-subtle: #EFEAE1;
-  --color-dark: #11110F;
-  --color-dark-surface: #1A1916;
-  --color-dark-card: #161513;
-  --color-ink: #161513;
-  --color-ink-muted: #706D67;
-  --color-gold: #B89152;
-  --color-gold-light: #D3B679;
-  --color-border-light: rgba(17, 17, 15, 0.12);
-  --color-border-dark: rgba(255, 255, 255, 0.12);
+  --color-dark-bg: #080808;
+  --color-dark-secondary: #0D0D0D;
+  --color-dark-card: #111111;
+  --color-dark-elevated: #151515;
+  --color-dark-surface: #191919;
+  --color-text-primary: #F4F1EA;
+  --color-text-secondary: #A9A59D;
+  --color-text-muted: #77736C;
+  --color-gold: #C6A15B;
+  --color-gold-light: #DFC786;
+  --color-gold-deep: #8E6A32;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-gold: rgba(198, 161, 91, 0.28);
+  --color-glass: rgba(255, 255, 255, 0.035);
 
-  --font-serif: "Playfair Display", "Cormorant Garamond", Georgia, serif;
-  --font-display: "Playfair Display", serif;
+  --font-serif: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  --font-display: "Cormorant Garamond", serif;
   --font-editorial: "Cormorant Garamond", serif;
   --font-script: "Caveat", cursive;
-  --font-sans: "Plus Jakarta Sans", "Manrope", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: "Manrope", "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 @layer base {
   * {
-    border-color: rgba(17, 17, 15, 0.12);
+    border-color: rgba(255, 255, 255, 0.08);
   }
 
   html {
     scroll-behavior: smooth;
     text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
+    background-color: #080808;
+    color: #F4F1EA;
   }
 
   body {
-    background-color: #F7F4EE;
-    color: #161513;
-    font-family: "Plus Jakarta Sans", "Manrope", "Inter", sans-serif;
+    background-color: #080808;
+    color: #F4F1EA;
+    font-family: "Manrope", "Plus Jakarta Sans", sans-serif;
     overflow-x: hidden;
     margin: 0;
     padding: 0;
+  }
+
+  section[id] {
+    scroll-margin-top: 110px;
   }
 
   #root {
@@ -46,11 +55,12 @@
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
+    background-color: #080808;
   }
 
   ::selection {
-    background-color: rgba(184, 145, 82, 0.25);
-    color: #11110F;
+    background-color: rgba(198, 161, 91, 0.3);
+    color: #F4F1EA;
   }
 }
 
@@ -68,57 +78,86 @@
 .animate-marquee-left {
   display: flex;
   width: max-content;
-  animation: marquee-left 40s linear infinite;
+  animation: marquee-left 45s linear infinite;
 }
 
 .animate-marquee-right {
   display: flex;
   width: max-content;
-  animation: marquee-right 40s linear infinite;
+  animation: marquee-right 45s linear infinite;
 }
 
 .pause-hover:hover {
   animation-play-state: paused;
 }
 
+/* Gold Sweep Light Reveal for Major Headings */
+@keyframes gold-sweep {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.gold-sweep-text {
+  background: linear-gradient(
+    90deg,
+    #F4F1EA 0%,
+    #F4F1EA 35%,
+    #DFC786 50%,
+    #C6A15B 65%,
+    #F4F1EA 80%,
+    #F4F1EA 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gold-sweep 3.5s ease-in-out 1 forwards;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #F7F4EE;
+  background: #080808;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(184, 145, 82, 0.4);
+  background: rgba(198, 161, 91, 0.35);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(184, 145, 82, 0.7);
+  background: rgba(198, 161, 91, 0.65);
 }
 
-/* Utilities for editorial text strokes and glassmorphism */
-.text-stroke-dark {
-  -webkit-text-stroke: 1px rgba(22, 21, 19, 0.4);
+/* Utilities for editorial text strokes and dark glassmorphism */
+.text-stroke-muted {
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.18);
   color: transparent;
 }
 
-.text-stroke-light {
-  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+.text-stroke-gold {
+  -webkit-text-stroke: 1px rgba(198, 161, 91, 0.5);
   color: transparent;
-}
-
-.glass-cream {
-  background: rgba(247, 244, 238, 0.82);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(17, 17, 15, 0.08);
 }
 
 .glass-dark {
-  background: rgba(26, 25, 22, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(17, 17, 17, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-navbar {
+  background: rgba(10, 10, 10, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Subtle background grain simulation */
+.bg-grain {
+  background-image: radial-gradient(circle at 80% 20%, rgba(198, 161, 91, 0.08), transparent 35%),
+                    radial-gradient(circle at 20% 70%, rgba(198, 161, 91, 0.05), transparent 30%);
 }
 
 /* Respect user's reduced motion preference */

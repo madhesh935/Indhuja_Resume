@@ -27,21 +27,21 @@ export const ContactConstellation: React.FC<ContactConstellationProps> = ({ isBu
     const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
     camera.position.set(0, 0, 16);
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.setClearColor(0x000000, 0);
     container.appendChild(renderer.domElement);
 
-    // Particle nodes
-    const particleCount = 42;
+    // 24 sparse nodes (between 18–30)
+    const particleCount = 24;
     const originalPositions = new Float32Array(particleCount * 3);
     const currentPositions = new Float32Array(particleCount * 3);
 
     for (let i = 0; i < particleCount; i++) {
-      const x = (Math.random() - 0.5) * 22;
-      const y = (Math.random() - 0.5) * 14;
-      const z = (Math.random() - 0.5) * 8;
+      const x = (Math.random() - 0.5) * 20;
+      const y = (Math.random() - 0.5) * 12;
+      const z = (Math.random() - 0.5) * 6;
 
       originalPositions[i * 3] = x;
       originalPositions[i * 3 + 1] = y;
@@ -56,16 +56,16 @@ export const ContactConstellation: React.FC<ContactConstellationProps> = ({ isBu
     pointsGeometry.setAttribute('position', new THREE.BufferAttribute(currentPositions, 3));
 
     const pointsMaterial = new THREE.PointsMaterial({
-      color: 0xb89152,
-      size: 0.18,
+      color: 0xc6a15b,
+      size: 0.15,
       transparent: true,
-      opacity: 0.5,
+      opacity: 0.55,
     });
 
     const points = new THREE.Points(pointsGeometry, pointsMaterial);
     scene.add(points);
 
-    // Subtle connecting lines between nearby constellation nodes
+    // Very low opacity connecting lines
     const lineIndices: number[] = [];
     for (let i = 0; i < particleCount; i++) {
       for (let j = i + 1; j < particleCount; j++) {
@@ -73,7 +73,7 @@ export const ContactConstellation: React.FC<ContactConstellationProps> = ({ isBu
         const dy = originalPositions[i * 3 + 1] - originalPositions[j * 3 + 1];
         const dz = originalPositions[i * 3 + 2] - originalPositions[j * 3 + 2];
         const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-        if (dist < 4.5) {
+        if (dist < 5.0) {
           lineIndices.push(i, j);
         }
       }
@@ -84,9 +84,9 @@ export const ContactConstellation: React.FC<ContactConstellationProps> = ({ isBu
     linesGeometry.setIndex(lineIndices);
 
     const linesMaterial = new THREE.LineBasicMaterial({
-      color: 0xb89152,
+      color: 0xc6a15b,
       transparent: true,
-      opacity: 0.1,
+      opacity: 0.07,
     });
 
     const lines = new THREE.LineSegments(linesGeometry, linesMaterial);
@@ -105,8 +105,9 @@ export const ContactConstellation: React.FC<ContactConstellationProps> = ({ isBu
     let mouseX = 0;
     let mouseY = 0;
     const handleMouseMove = (e: MouseEvent) => {
-      mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-      mouseY = -(e.clientY / window.innerHeight - 0.5) * 2;
+      // Max 4px cursor shift
+      mouseX = (e.clientX / window.innerWidth - 0.5) * 0.4;
+      mouseY = -(e.clientY / window.innerHeight - 0.5) * 0.4;
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -118,21 +119,21 @@ export const ContactConstellation: React.FC<ContactConstellationProps> = ({ isBu
       const posAttr = pointsGeometry.getAttribute('position') as THREE.BufferAttribute;
       const posArray = posAttr.array as Float32Array;
 
-      // Subtle mouse shifts & convergence towards center on button hover
+      // Subtle convergence toward center (0,0,0) when CTA button is hovered
       for (let i = 0; i < particleCount; i++) {
         const origX = originalPositions[i * 3];
         const origY = originalPositions[i * 3 + 1];
         const origZ = originalPositions[i * 3 + 2];
 
-        let targetX = origX + mouseX * 0.8;
-        let targetY = origY + mouseY * 0.8;
+        let targetX = origX + mouseX;
+        let targetY = origY + mouseY;
         let targetZ = origZ;
 
-        // If button is hovered, converge towards center (0, 0, 0)
-        if (isHoveredRef.current) {
-          targetX = origX * 0.7;
-          targetY = origY * 0.7;
-          targetZ = origZ * 0.7;
+        if (isHoveredRef.current && (i % 3 === 0)) {
+          // 3-5 nearby nodes gently move toward center
+          targetX = origX * 0.65;
+          targetY = origY * 0.65;
+          targetZ = origZ * 0.65;
         }
 
         posArray[i * 3] += (targetX - posArray[i * 3]) * 0.04;
